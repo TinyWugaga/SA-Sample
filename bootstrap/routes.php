@@ -1,97 +1,115 @@
 <?php
 
-declare(strict_types=1);
-
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\App;
-use Slim\Interfaces\RouteCollectorProxyInterface as Group;
-
-return function (App $app) {
-
-    $app->get('/', function (Request $request, Response $response, $args) {
-
+Route::get(
+    '/',
+    function () {
         render('index', [
             'msg' => 'hello',
         ]);
+    }
+);
 
-        return $response;
-    });
-
-    $app->post('/login', function (Request $request, Response $response, $args) {
-
+Route::post(
+    '/login',
+    function ($request) {
         $data = $request->getParsedBody(); //$_POST
 
         $account = $data['account'] ?? '';
         $password = $data['password'] ?? '';
 
         $result = verifyPassengerLogin($account, $password);
-        if ($result) {
-            render('index', ['msg' => 'success',]);
-        } else {
-            render('index', ['msg' => 'wrong',]);
-        }
 
-        return $response;
-    });
+        render('index', ['msg' => $result ? 'success' : 'wrong',]);
+    }
+);
 
-    /* =========================================================================
-    * = DRIVER
-    * =========================================================================
-    **/
-    $app->get('/driver', function (Request $request, Response $response, $args) {
+    // $app->get('/', function (Request $request, Response $response, $args) {
 
-        echo '<pre>';
-        var_dump(DB::fetchAll('driver'));
+    //     render('index', [
+    //         'msg' => 'hello',
+    //     ]);
 
-        return $response;
-    });
+    //     return $response;
+    // });
 
-    $app->get('/driver/{id}', function (Request $request, Response $response, $args) {
+    // $app->post('/login', function (Request $request, Response $response, $args) {
 
-        $driverId = $args['id'];
+    //     $data = $request->getParsedBody(); //$_POST
 
-        //司機駕駛的公車
-        $bus = DB::find('bus', $driverId, 'driver_id');
-        $departTime = $bus['DEPART_TIME'];
+    //     $account = $data['account'] ?? '';
+    //     $password = $data['password'] ?? '';
 
-        var_dump(countTimeToArriveNextStop($departTime));
+    //     $result = verifyPassengerLogin($account, $password);
+    //     if ($result) {
+    //         render('index', ['msg' => 'success',]);
+    //     } else {
+    //         render('index', ['msg' => 'wrong',]);
+    //     }
 
-        return $response;
-    });
+    //     return $response;
+    // });
 
-    /* =========================================================================
-    * = STOP
-    * =========================================================================
-    **/
-    $app->get('/stop', function (Request $request, Response $response, $args) {
+    // /* =========================================================================
+    // * = DRIVER
+    // * =========================================================================
+    // **/
+    // $app->get('/driver', function (Request $request, Response $response, $args) {
 
-        render('stop', ['msg' => '增加站牌資訊',]);
+    //     echo '<pre>';
+    //     var_dump(DB::fetchAll('driver'));
 
-        return $response;
-    });
+    //     return $response;
+    // });
 
-    $app->post('/stop/add', function (Request $request, Response $response, $args) {
+    // $app->get('/driver/{id}', function (Request $request, Response $response, $args) {
 
-        $data = $request->getParsedBody();
+    //     $driverId = $args['id'];
 
-        $result = DB::create('stop', $data);
+    //     //司機駕駛的公車
+    //     $bus = DB::find('bus', $driverId, 'driver_id');
+    //     $departTime = $bus['DEPART_TIME'];
 
-        render('stop', ['msg' => $result ? '增加站牌資訊成功':'增加站牌資訊失敗',]);
+    //     var_dump(countTimeToArriveNextStop($departTime));
 
-        return $response;
-    });
+    //     return $response;
+    // });
 
-    $app->post('/stop/update', function (Request $request, Response $response, $args) {
+    // /* =========================================================================
+    // * = STOP
+    // * =========================================================================
+    // **/
+    // $app->get('/stop', function (Request $request, Response $response, $args) {
 
-        $data = $request->getParsedBody();
+    //     render('stop', ['msg' => '增加站牌資訊',]);
 
-        $stopId = $data['STOP_ID'];
+    //     return $response;
+    // });
 
-        $result = DB::update('stop', "`STOP_ID` = {$stopId}", $data);
+    // $app->post('/stop/add', function (Request $request, Response $response, $args) {
 
-        render('stop', ['msg' => $result ? '修改站牌資訊成功':'修改站牌資訊失敗',]);
+    //     $data = $request->getParsedBody();
 
-        return $response;
-    });
-};
+    //     $result = DB::create('stop', $data);
+
+    //     render('stop', ['msg' => $result ? '增加站牌資訊成功':'增加站牌資訊失敗',]);
+
+    //     return $response;
+    // });
+
+    // $app->post('/stop/update', function (Request $request, Response $response, $args) {
+
+    //     $data = $request->getParsedBody();
+
+    //     $stopId = $data['STOP_ID'];
+
+    //     $result = DB::update('stop', "`STOP_ID` = {$stopId}", $data);
+
+    //     render('stop', ['msg' => $result ? '修改站牌資訊成功':'修改站牌資訊失敗',]);
+
+    //     return $response;
+    // });
+
+    // Route::get('/test-route',function () {
+    //     echo 'just a test';
+    //     render('index', ['msg' => '做個測試']);
+    // });

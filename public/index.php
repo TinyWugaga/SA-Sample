@@ -1,19 +1,13 @@
 <?php
 
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
 use App\ResponseEmitter;
 
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/_bootstrap.php';
 
-$app = AppFactory::create();
-
 $app->add($response);
-
-// Register routes
-$routes($app);
 
 // Create Request object from globals
 $serverRequestCreator = ServerRequestCreatorFactory::create();
